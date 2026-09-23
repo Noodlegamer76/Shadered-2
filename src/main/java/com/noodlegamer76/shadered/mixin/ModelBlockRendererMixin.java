@@ -5,12 +5,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.block.ModBlockStateProperties;
 import com.noodlegamer76.shadered.block.Skyblock;
+import com.noodlegamer76.shadered.client.renderer.skybox.SkyblockRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,9 +24,7 @@ public class ModelBlockRendererMixin {
 
     @Inject(
             method = "putQuadData",
-            at = @At(
-                    value = "HEAD"
-            ),
+            at = @At("HEAD"),
             cancellable = true
     )
     public void shadered$putQuadData(
@@ -43,10 +44,23 @@ public class ModelBlockRendererMixin {
             int pLightmap3,
             int pPackedOverlay,
             CallbackInfo ci) {
-        if (pState.is(InitBlocks.SKYBLOCK.get())) {
-            int packedSkyblock = LightTexture.pack(pState.getValue(ModBlockStateProperties.SKYBLOCK), 0);
-            pConsumer.putBulkData(pPose, pQuad, new float[]{pBrightness0, pBrightness1, pBrightness2, pBrightness3}, 1, 1, 1, new int[]{packedSkyblock, packedSkyblock, packedSkyblock, packedSkyblock}, pPackedOverlay, true);
-            ci.cancel();
-        }
+        SkyblockRenderer.shadered$putQuadData(
+                pLevel,
+                pState,
+                pPos,
+                pConsumer,
+                pPose,
+                pQuad,
+                pBrightness0,
+                pBrightness1,
+                pBrightness2,
+                pBrightness3,
+                pLightmap0,
+                pLightmap1,
+                pLightmap2,
+                pLightmap3,
+                pPackedOverlay,
+                ci
+        );
     }
 }

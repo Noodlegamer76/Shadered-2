@@ -14,8 +14,22 @@
     "Normal"
   ],
   "samplers": [
-    { "name": "Sampler0" },
-    { "name": "Sampler2" }
+    { "name": "skybox0" },
+    { "name": "skybox1" },
+    { "name": "skybox2" },
+    { "name": "skybox3" },
+    { "name": "skybox4" },
+    { "name": "skybox5" },
+    { "name": "skybox6" },
+    { "name": "skybox7" },
+    { "name": "skybox8" },
+    { "name": "skybox9" },
+    { "name": "skybox10" },
+    { "name": "skybox11" },
+    { "name": "skybox12" },
+    { "name": "skybox13" },
+    { "name": "skybox14" },
+    { "name": "skybox15" }
   ],
   "uniforms": [
     { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

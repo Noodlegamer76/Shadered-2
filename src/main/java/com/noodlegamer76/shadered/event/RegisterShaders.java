@@ -26,7 +26,7 @@ public class RegisterShaders {
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "skyblock"),
-                        DefaultVertexFormat.POSITION),
+                        DefaultVertexFormat.BLOCK),
                 (e) -> {
                     skyblock = e;
                     SHADERS.put("skyblock", e);
