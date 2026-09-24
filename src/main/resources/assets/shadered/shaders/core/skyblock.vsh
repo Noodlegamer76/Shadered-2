@@ -18,7 +18,7 @@ out float vertexDistance;
 out vec4 vertexColor;
 out vec2 texCoord0;
 out vec4 normal;
-        flat out ivec2 skyblock;
+flat out ivec2 skyblock;
 
 void main() {
     vec3 pos = Position + ChunkOffset;
@@ -26,6 +26,6 @@ void main() {
 
     vertexDistance = fog_distance(ModelViewMat, pos, FogShape);
     texCoord0 = UV0;
-        skyblock = UV2;
+    skyblock = UV2;
     normal = ProjMat * ModelViewMat * vec4(Normal, 0.0);
 }

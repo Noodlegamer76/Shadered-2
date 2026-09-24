@@ -14,6 +14,6 @@ public class InitCreativeTabs {
 
     public static RegistryObject<CreativeModeTab> SHADERED_TAB = CREATIVE_TABS.register("shadered_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("shadered.creative_tab"))
-            .icon(() -> new ItemStack(InitItems.SKYBLOCK.get()))
+            .icon(() -> new ItemStack(InitItems.SPACE_SKYBLOCK.get()))
             .build());
 }

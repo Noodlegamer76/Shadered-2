@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.block.InitBlocks;
 import com.noodlegamer76.shadered.block.ModBlockStateProperties;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -35,11 +36,19 @@ public class SkyblockRenderer {
 
         if (pState.is(InitBlocks.SKYBLOCK.get())) {
             int skyblock = pState.getValue(ModBlockStateProperties.SKYBLOCK);
+            int packedSkyblock = LightTexture.pack(skyblock, 0);
 
             int[] vertices = pQuad.getVertices();
             float[] afloat = new float[]{pBrightness0, pBrightness1, pBrightness2, pBrightness3};
 
             Matrix4f poseMatrix = pPose.pose();
+
+            float[][] uv = {
+                    {0.0F, 0.0F},
+                    {1.0F, 0.0F},
+                    {1.0F, 1.0F},
+                    {0.0F, 1.0F}
+            };
 
             for (int k = 0; k < 4; ++k) {
                 int offset = k * 8;
@@ -48,16 +57,13 @@ public class SkyblockRenderer {
                 float y = Float.intBitsToFloat(vertices[offset + 1]);
                 float z = Float.intBitsToFloat(vertices[offset + 2]);
 
-                float u = Float.intBitsToFloat(vertices[offset + 4]);
-                float v = Float.intBitsToFloat(vertices[offset + 5]);
-
                 Vector4f worldPos = poseMatrix.transform(new Vector4f(x, y, z, 1.0F));
 
                 pConsumer.vertex(worldPos.x(), worldPos.y(), worldPos.z())
                         .color(afloat[k], afloat[k], afloat[k], 1.0F)
-                        .uv(0, 0)
+                        .uv(uv[k][0], uv[k][1])
                         .overlayCoords(0, 0)
-                        .uv2(skyblock, 0)
+                        .uv2(packedSkyblock)
                         .normal(0, 0, 0)
                         .endVertex();
             }

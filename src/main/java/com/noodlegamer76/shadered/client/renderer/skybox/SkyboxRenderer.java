@@ -1,10 +1,10 @@
 package com.noodlegamer76.shadered.client.renderer.skybox;
 
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.noodlegamer76.shadered.Shadered;
-import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.ModBlockStateProperties;
 import com.noodlegamer76.shadered.client.renderer.complexpass.ComplexPassRenderer;
 import com.noodlegamer76.shadered.client.renderer.complexpass.RenderStage;
 import com.noodlegamer76.shadered.client.renderer.complexpass.passes.SkyboxRenderPass;
@@ -12,22 +12,14 @@ import com.noodlegamer76.shadered.event.RegisterShaders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.lwjgl.opengl.GL30.*;
 
 public class SkyboxRenderer {
     private static final SkyboxRenderer INSTANCE = new SkyboxRenderer();
@@ -43,17 +35,17 @@ public class SkyboxRenderer {
     public static final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/light");
     public static final ResourceLocation FOREST = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/forest");
     public static final ResourceLocation IRIDIA = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/iridia");
+    public static final ResourceLocation PIXEL = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/misc/pixel.png");
 
-    private int textureArrayId;
-    private final Map<Integer, Integer> skyboxIDToTextureArrayID = new HashMap<>();
+    private final Map<Integer, Integer> skyboxIDToRenderID = new HashMap<>();
     private final List<SkyboxRenderPass> skyboxes = new ArrayList<>();
 
     private SkyboxRenderer() {
 
     }
 
-    public int getTextureId(int stateId) {
-        return skyboxIDToTextureArrayID.getOrDefault(stateId, -1);
+    public int getSkyboxTextureId(int stateId) {
+        return skyboxIDToRenderID.getOrDefault(stateId, -1);
     }
 
     public void registerSkybox(SkyboxRenderPass pass, int id) {
@@ -61,14 +53,14 @@ public class SkyboxRenderer {
 
         renderer.add(RenderStage.AFTER_SKY, pass);
 
-        if (skyboxIDToTextureArrayID.containsKey(id)) {
+        if (skyboxIDToRenderID.containsKey(id)) {
             throw new IllegalArgumentException("Duplicate Skybox ID: [" + id + "]");
         }
-        if (id < 0 || id > 15) {
-            throw new IllegalArgumentException("Invalid ID: [" + id + "], ID must be 0-15");
+        if (id < 0 || id > 10) {
+            throw new IllegalArgumentException("Invalid ID: [" + id + "], ID must be 0-10");
         }
 
-        skyboxIDToTextureArrayID.put(id, skyboxIDToTextureArrayID.size());
+        skyboxIDToRenderID.put(id, skyboxIDToRenderID.size());
         skyboxes.add(pass);
     }
 
@@ -86,6 +78,18 @@ public class SkyboxRenderer {
 
             String name = "skybox" + i;
             shader.setSampler(name, textureId);
+        }
+
+        int pixelTextureId = Minecraft.getInstance()
+                .getTextureManager()
+                .getTexture(PIXEL)
+                .getId();
+        shader.setSampler("pixel", pixelTextureId);
+
+        Window window = Minecraft.getInstance().getWindow();
+        Uniform screenSize = shader.SCREEN_SIZE;
+        if (screenSize != null) {
+            screenSize.set((float) window.getWidth(), (float) window.getHeight());
         }
     }
 
@@ -140,9 +144,6 @@ public class SkyboxRenderer {
         registerSkybox(iridiaRenderPass, 4);
         registerSkybox(forestRenderPass, 5);
         registerSkybox(lightRenderPass, 6);
-
-        textureArrayId = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayId);
     }
 
     public static void renderBlockSkybox(PoseStack poseStack, SkyboxTranslation translation,

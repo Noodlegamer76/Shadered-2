@@ -17,7 +17,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
-
+    protected void addTags(HolderLookup.Provider provider) {
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(InitBlocks.SKYBLOCK.get());
     }
 }

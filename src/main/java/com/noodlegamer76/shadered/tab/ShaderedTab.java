@@ -13,7 +13,13 @@ public class ShaderedTab {
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == InitCreativeTabs.SHADERED_TAB.get()) {
-            event.accept(InitItems.SKYBLOCK);
+            event.accept(InitItems.SPACE_SKYBLOCK);
+            event.accept(InitItems.STORMY_SKYBLOCK);
+            event.accept(InitItems.OCEAN_SKYBLOCK);
+            event.accept(InitItems.ECLIPSE_SKYBLOCK);
+            event.accept(InitItems.IRIDIA_SKYBLOCK);
+            event.accept(InitItems.FOREST_SKYBLOCK);
+            event.accept(InitItems.LIGHT_SKYBLOCK);
         }
     }
 }

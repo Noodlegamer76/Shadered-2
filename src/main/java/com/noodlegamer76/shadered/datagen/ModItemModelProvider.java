@@ -19,6 +19,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+
     }
 
     private ItemModelBuilder saplingItem(RegistryObject<Block> item) {
