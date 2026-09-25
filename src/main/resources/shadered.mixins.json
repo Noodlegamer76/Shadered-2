@@ -5,6 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "shadered.refmap.json",
   "mixins": [
+    "compat.embeddium.BlockRendererMixin",
+    "compat.embeddium.ChunkShaderInterfaceMixin",
+    "compat.embeddium.DefaultMaterialsMixin",
+    "compat.embeddium.DefaultTerrainRenderPassesMixin",
+    "compat.embeddium.ShaderChunkRendererMixin",
+    "compat.embeddium.SodiumWorldRendererMixin"
   ],
   "client": [
     "LevelRendererMixin",

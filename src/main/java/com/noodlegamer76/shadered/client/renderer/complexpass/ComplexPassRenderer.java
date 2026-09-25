@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * The reason this class exists is mainly to allow for rendering geometry with custom Core Shaders into a different FrameBuffer.
- * This allows the geometry to show up when using Shader Packs with Iris/Oculus.
+ * This allows the geometry to show up when using Shader Packs with Iris/Oculus, Though with some limitations on how it interacts with the shader packs (eg. shadows).
  */
 public class ComplexPassRenderer {
     private static final ComplexPassRenderer INSTANCE = new ComplexPassRenderer();

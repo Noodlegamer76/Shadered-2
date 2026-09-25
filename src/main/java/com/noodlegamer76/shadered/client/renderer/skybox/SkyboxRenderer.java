@@ -35,7 +35,6 @@ public class SkyboxRenderer {
     public static final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/light");
     public static final ResourceLocation FOREST = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/forest");
     public static final ResourceLocation IRIDIA = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/environment/iridia");
-    public static final ResourceLocation PIXEL = ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "textures/misc/pixel.png");
 
     private final Map<Integer, Integer> skyboxIDToRenderID = new HashMap<>();
     private final List<SkyboxRenderPass> skyboxes = new ArrayList<>();
@@ -80,17 +79,15 @@ public class SkyboxRenderer {
             shader.setSampler(name, textureId);
         }
 
-        int pixelTextureId = Minecraft.getInstance()
-                .getTextureManager()
-                .getTexture(PIXEL)
-                .getId();
-        shader.setSampler("pixel", pixelTextureId);
-
         Window window = Minecraft.getInstance().getWindow();
         Uniform screenSize = shader.SCREEN_SIZE;
         if (screenSize != null) {
             screenSize.set((float) window.getWidth(), (float) window.getHeight());
         }
+    }
+
+    public List<SkyboxRenderPass> getSkyboxes() {
+        return new ArrayList<>(skyboxes);
     }
 
     public void setup() {

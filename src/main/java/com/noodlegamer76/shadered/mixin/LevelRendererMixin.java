@@ -36,7 +36,7 @@ public abstract class LevelRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    public void onRenderChunkLayer(PoseStack pPoseStack,
+    public void shadered$onRenderChunkLayer(PoseStack pPoseStack,
                                    float pPartialTick,
                                    long pFinishNanoTime,
                                    boolean pRenderBlockOutline,

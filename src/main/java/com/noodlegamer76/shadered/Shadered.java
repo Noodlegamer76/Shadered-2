@@ -17,6 +17,8 @@ public class Shadered {
     public Shadered() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        NativeLibraryLoader.loadNatives();
+
         InitItems.ITEMS.register(modEventBus);
         InitBlocks.BLOCKS.register(modEventBus);
         InitCreativeTabs.CREATIVE_TABS.register(modEventBus);

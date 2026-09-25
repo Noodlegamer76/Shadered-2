@@ -18,7 +18,7 @@ public class RenderTypeMixin {
             method = "chunkBufferLayers",
             at = @At(value = "RETURN"),
             cancellable = true)
-    private static void onChunkBufferLayers(CallbackInfoReturnable<List<RenderType>> cir) {
+    private static void shadered$onChunkBufferLayers(CallbackInfoReturnable<List<RenderType>> cir) {
         List<RenderType> immutable = cir.getReturnValue();
         List<RenderType> list = new ArrayList<>(immutable);
         list.add(

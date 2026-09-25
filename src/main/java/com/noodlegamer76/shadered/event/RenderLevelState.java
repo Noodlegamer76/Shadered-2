@@ -13,8 +13,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Shadered.MODID, value = Dist.CLIENT)
 public class RenderLevelState {
-    //TODO: make a proper loading system that works with resource reloads
-    private static boolean initialized;
 
     @SubscribeEvent
     public static void levelRenderEvent(RenderLevelStageEvent event) {
@@ -26,10 +24,6 @@ public class RenderLevelState {
         ComplexPassRenderer renderer = ComplexPassRenderer.getInstance();
 
         if (stage == RenderLevelStageEvent.Stage.AFTER_SKY) {
-            if (!initialized) {
-                initialized = true;
-                SkyboxRenderer.getInstance().setup();
-            }
             SkyboxRenderer.getInstance().preRender();
             renderer.render(RenderStage.AFTER_SKY, poseStack, renderTick, partialTick);
         }

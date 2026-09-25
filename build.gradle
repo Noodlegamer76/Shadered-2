@@ -1,6 +1,11 @@
+import org.gradle.internal.os.OperatingSystem
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
+
 buildscript {
     repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
@@ -15,6 +20,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -31,62 +37,19 @@ java {
 }
 
 minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
     mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 
-    // When true, this property will have all Eclipse/IntelliJ IDEA run configurations run the "prepareX" task for the given run configuration before launching the game.
-    // In most cases, it is not necessary to enable.
-    // enableEclipsePrepareRuns = true
-    // enableIdeaPrepareRuns = true
-
-    // This property allows configuring Gradle's ProcessResources task(s) to run on IDE output locations before launching the game.
-    // It is REQUIRED to be set to true for this template to function.
-    // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
     copyIdeResources = true
 
-    // When true, this property will add the folder name of all declared run configurations to generated IDE run configurations.
-    // The folder name can be set on a run configuration using the "folderName" property.
-    // By default, the folder name of a run configuration is the name of the Gradle project containing it.
-    // generateRunFolders = true
-
-    // This property enables access transformers for use in development.
-    // They will be applied to the Minecraft artifact.
-    // The access transformer file can be anywhere in the project.
-    // However, it must be at "META-INF/accesstransformer.cfg" in the final mod jar to be loaded by Forge.
-    // This default location is a best practice to automatically put the file in the right place in the final jar.
-    // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
     runs {
-        // applies to all the run configs below
         configureEach {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             property 'forge.logging.markers', 'REGISTRIES'
 
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -97,7 +60,6 @@ minecraft {
         }
 
         client {
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 
@@ -106,18 +68,13 @@ minecraft {
             args '--nogui'
         }
 
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
-            // example of overriding the workingDirectory set in configureEach above
             workingDirectory project.file('run-data')
 
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
@@ -129,8 +86,38 @@ mixin {
     config "${mod_id}.mixins.json"
 }
 
-// Include resources generated by data generators.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+def os = OperatingSystem.current()
+def osArch = System.getProperty("os.arch").toLowerCase()
+
+switch (os) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+
+        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+            project.ext.lwjglNatives +=
+                    (osArch.contains("64") || osArch.startsWith("armv8"))
+                            ? "-arm64"
+                            : "-arm32"
+        } else if (osArch.startsWith("ppc")) {
+            project.ext.lwjglNatives += "-ppc64le"
+        } else if (osArch.startsWith("riscv")) {
+            project.ext.lwjglNatives += "-riscv64"
+        }
+        break
+
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+
+    default:
+        throw new GradleException("Unsupported operating system: ${os}")
+}
 
 repositories {
     maven {
@@ -141,7 +128,21 @@ repositories {
             includeGroup("com.eliotlash.mclib")
         }
     }
-    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+
+    maven {
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        url "https://maven.blamejared.com"
+    }
 }
 
 dependencies {
@@ -154,36 +155,37 @@ dependencies {
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     implementation("com.eliotlash.mclib:mclib:20")
 
-    // Specify the version of Minecraft to use.
-    // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
-    // The "userdev" classifier will be requested and setup by ForgeGradle.
-    // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
-    // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
+    def lwjglVersion = "3.3.1"
+
+    minecraftLibrary("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    shadow("org.lwjgl:lwjgl-assimp:${lwjglVersion}") {
+        exclude group: 'org.lwjgl', module: 'lwjgl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+        exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+        exclude group: 'org.lwjgl', module: 'lwjgl-stb'
+    }
+
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos"
+
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
+
+    //Test Mods
+    implementation fg.deobf("org.embeddedt:embeddium-1.20.1:0.3.31-beta.53+mc1.20.1")
+    implementation fg.deobf("curse.maven:oculus-581495:6020952")
+
 }
 
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
-// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
                              forge_version       : forge_version, forge_version_range: forge_version_range,
@@ -198,22 +200,195 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
     manifest {
         attributes(["Specification-Title"     : mod_id,
                     "Specification-Vendor"    : mod_authors,
-                    "Specification-Version"   : "1", // We are version 1 of ourselves
+                    "Specification-Version"   : "1",
                     "Implementation-Title"    : project.name,
                     "Implementation-Version"  : project.jar.archiveVersion,
                     "Implementation-Vendor"   : mod_authors,
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
     }
 
-    // This is the preferred method to reobfuscate your jar file
     finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
 }
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    dependencies {
+        exclude(dependency('org.lwjgl:lwjgl'))
+        exclude(dependency('org.lwjgl:lwjgl-glfw'))
+        exclude(dependency('org.lwjgl:lwjgl-opengl'))
+    }
+}
+
+task moveFiles {
+    doLast {
+        def inputFile = file("$buildDir/libs/" + shadowJar.archiveFileName.get())
+        def outputFile = file("$buildDir/libs/" + jar.archiveFileName.get())
+
+        def tempFile = file("$buildDir/libs/" + "output_temp.zip")
+
+        if (inputFile.exists() && outputFile.exists()) {
+            def sourceZip = new ZipFile(inputFile)
+            def destinationZip = new ZipFile(outputFile)
+            def zipOut = new ZipOutputStream(new FileOutputStream(tempFile))
+
+            destinationZip.entries().each { entry ->
+                zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                zipOut.write(destinationZip.getInputStream(entry).readAllBytes())
+                zipOut.closeEntry()
+            }
+
+            sourceZip.entries().each { entry ->
+                if (destinationZip.getEntry(entry.getName()) == null) {
+                    zipOut.putNextEntry(new ZipEntry(entry.getName()))
+                    zipOut.write(sourceZip.getInputStream(entry).readAllBytes())
+                    zipOut.closeEntry()
+                } else {
+                    println "File already exists in destination ZIP: ${entry.getName()}. Skipping."
+                }
+            }
+
+            zipOut.close()
+            sourceZip.close()
+            destinationZip.close()
+
+            if (outputFile.exists()) {
+                outputFile.delete()
+            }
+            tempFile.renameTo(outputFile)
+            inputFile.delete()
+        } else {
+            println "Input or output ZIP file not found."
+        }
+    }
+}
+
+build {
+    dependsOn shadowJar
+    finalizedBy moveFiles
+}
+
+task extractNativesToResources {
+    group = "build"
+    description = "Extract native binaries from Gradle dependencies into resources/natives/... for packaging"
+
+    doLast {
+        configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+            def moduleName = artifact.moduleVersion.id.name
+            def classifier = artifact.classifier
+
+            if ((moduleName == "lwjgl-assimp" && classifier?.startsWith("natives")) ||
+                    (moduleName.startsWith("imgui-java-natives"))) {
+
+                println "Extracting natives from: ${artifact.file.name}"
+
+                ZipFile zip = new ZipFile(artifact.file)
+                zip.entries().each { entry ->
+                    if (!entry.isDirectory()) {
+                        def fileName = entry.name.substring(entry.name.lastIndexOf('/') + 1)
+
+                        def subdir = null
+                        if (fileName.endsWith(".dll")) {
+                            subdir = "windows/x86_64"
+                        } else if (fileName.endsWith(".so")) {
+                            subdir = "linux/x86_64"
+                        } else if (fileName.endsWith(".dylib")) {
+                            subdir = fileName.contains("arm") ? "osx/arm64" : "osx/x86_64"
+                        }
+
+                        if (subdir != null) {
+                            def destDir = file("src/main/resources/natives/${subdir}")
+                            destDir.mkdirs()
+
+                            def outFile = new File(destDir, fileName)
+                            outFile.withOutputStream { osStream ->
+                                zip.getInputStream(entry).withStream { it.transferTo(osStream) }
+                            }
+
+                            println "Copied $fileName -> $outFile"
+                        }
+                    }
+                }
+                zip.close()
+            }
+        }
+    }
+}
+
+task bundleAllNativesForDistribution {
+    group = "build"
+    description = "Bundles Assimp natives into resources/natives"
+
+    doLast {
+        def seen = new HashSet<String>()
+
+        configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+
+            def moduleName = artifact.moduleVersion.id.name
+            def group = artifact.moduleVersion.id.group
+            def classifier = artifact.classifier
+
+            if (!(group == "org.lwjgl" && moduleName == "lwjgl-assimp" && classifier?.startsWith("natives"))) {
+                return
+            }
+
+            println "Using Assimp native artifact: ${artifact.file.name}"
+
+            ZipFile zip = new ZipFile(artifact.file)
+
+            zip.entries().each { entry ->
+                if (entry.isDirectory()) return
+
+                def fileName = entry.name.substring(entry.name.lastIndexOf('/') + 1)
+
+                if (!(fileName.endsWith(".dll") ||
+                        fileName.endsWith(".so") ||
+                        fileName.endsWith(".dylib"))) {
+                    return
+                }
+
+                def key = artifact.file.name + ":" + entry.name
+                if (!seen.add(key)) return
+
+                def dir = null
+
+                if (fileName.endsWith(".dll")) {
+                    dir = "windows/x86_64"
+                } else if (fileName.endsWith(".so")) {
+                    dir = "linux/x86_64"
+                } else if (fileName.endsWith(".dylib")) {
+                    dir = fileName.contains("arm")
+                            ? "osx/arm64"
+                            : "osx/x86_64"
+                }
+
+                if (dir == null) return
+
+                def outDir = file("src/main/resources/natives/${dir}")
+                outDir.mkdirs()
+
+                def outFile = new File(outDir, fileName)
+
+                outFile.withOutputStream { os2 ->
+                    zip.getInputStream(entry).withStream { it.transferTo(os2) }
+                }
+
+                println "Bundled ASSIMP ${fileName} -> ${dir}"
+            }
+
+            zip.close()
+        }
+    }
+}
+
+compileJava.dependsOn(extractNativesToResources)
+
+processResources.dependsOn(extractNativesToResources)
+
