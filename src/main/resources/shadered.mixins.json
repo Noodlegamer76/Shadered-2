@@ -10,7 +10,8 @@
     "compat.embeddium.DefaultMaterialsMixin",
     "compat.embeddium.DefaultTerrainRenderPassesMixin",
     "compat.embeddium.ShaderChunkRendererMixin",
-    "compat.embeddium.SodiumWorldRendererMixin"
+    "compat.embeddium.SodiumWorldRendererMixin",
+    "compat.iris.WorldRenderingPhaseMixin"
   ],
   "client": [
     "LevelRendererMixin",

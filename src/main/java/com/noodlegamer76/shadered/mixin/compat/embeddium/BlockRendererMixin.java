@@ -1,7 +1,6 @@
 package com.noodlegamer76.shadered.mixin.compat.embeddium;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.noodlegamer76.shadered.block.Skyblock;
+import com.noodlegamer76.shadered.world.block.Skyblock;
 import com.noodlegamer76.shadered.compat.embeddium.TerrainRenderPassAddition;
 import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 import me.jellysquid.mods.sodium.client.model.quad.BakedQuadView;

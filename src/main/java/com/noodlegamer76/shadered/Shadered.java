@@ -1,8 +1,8 @@
 package com.noodlegamer76.shadered;
 
 import com.mojang.logging.LogUtils;
-import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.item.InitItems;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
+import com.noodlegamer76.shadered.world.item.InitItems;
 import com.noodlegamer76.shadered.tab.InitCreativeTabs;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;

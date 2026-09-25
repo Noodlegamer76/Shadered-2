@@ -1,10 +1,9 @@
 package com.noodlegamer76.shadered.datagen;
 
-import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +18,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(InitBlocks.SKYBLOCK.get());
+                .add(InitBlocks.SKYBLOCK.get())
+                .add(InitBlocks.BLACK_BLOCK.get())
+                .add(InitBlocks.GREEN_SCREEN.get());
     }
 }

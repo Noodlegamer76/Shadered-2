@@ -2,18 +2,12 @@ package com.noodlegamer76.shadered.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.ModBlockStateProperties;
-import com.noodlegamer76.shadered.block.Skyblock;
 import com.noodlegamer76.shadered.client.renderer.skybox.SkyblockRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

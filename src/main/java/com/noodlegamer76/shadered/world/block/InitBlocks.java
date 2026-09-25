@@ -1,10 +1,9 @@
-package com.noodlegamer76.shadered.block;
+package com.noodlegamer76.shadered.world.block;
 
 import com.noodlegamer76.shadered.Shadered;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.registries.DeferredRegister;
@@ -19,6 +18,20 @@ public class InitBlocks {
                     .mapColor(DyeColor.WHITE)
                     .instrument(NoteBlockInstrument.XYLOPHONE)
                     .strength(0.5f, 1.5f)
+                    .requiresCorrectToolForDrops()
+            ));
+
+    public static final RegistryObject<Block> BLACK_BLOCK = BLOCKS.register("black_block",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .mapColor(DyeColor.BLACK)
+                    .strength(1.0f, 1.5f)
+                    .requiresCorrectToolForDrops()
+            ));
+
+    public static final RegistryObject<Block> GREEN_SCREEN = BLOCKS.register("green_screen",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .mapColor(DyeColor.LIME)
+                    .strength(1.0f, 1.5f)
                     .requiresCorrectToolForDrops()
             ));
 }

@@ -2,8 +2,8 @@ package com.noodlegamer76.shadered.client.renderer.skybox;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.noodlegamer76.shadered.block.InitBlocks;
-import com.noodlegamer76.shadered.block.ModBlockStateProperties;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
+import com.noodlegamer76.shadered.world.block.ModBlockStateProperties;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;

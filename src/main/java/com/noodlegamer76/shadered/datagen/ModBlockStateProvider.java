@@ -1,7 +1,7 @@
 package com.noodlegamer76.shadered.datagen;
 
 import com.noodlegamer76.shadered.Shadered;
-import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -18,6 +18,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        blockWithItem(InitBlocks.BLACK_BLOCK);
     }
 
     private void cubeBottomTop(RegistryObject<Block> block, ResourceLocation top, ResourceLocation side, ResourceLocation bottom) {

@@ -1,6 +1,6 @@
 package com.noodlegamer76.shadered.datagen;
 
-import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;

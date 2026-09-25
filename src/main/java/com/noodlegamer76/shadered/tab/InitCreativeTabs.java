@@ -1,7 +1,7 @@
 package com.noodlegamer76.shadered.tab;
 
 import com.noodlegamer76.shadered.Shadered;
-import com.noodlegamer76.shadered.item.InitItems;
+import com.noodlegamer76.shadered.world.item.InitItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

@@ -1,13 +1,12 @@
-package com.noodlegamer76.shadered.block;
+package com.noodlegamer76.shadered.world.block;
 
-import com.noodlegamer76.shadered.item.SkyblockItem;
+import com.noodlegamer76.shadered.world.item.SkyblockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;

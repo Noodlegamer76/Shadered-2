@@ -1,4 +1,4 @@
-package com.noodlegamer76.shadered.block;
+package com.noodlegamer76.shadered.world.block;
 
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 

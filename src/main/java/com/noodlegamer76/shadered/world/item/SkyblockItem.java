@@ -1,12 +1,9 @@
-package com.noodlegamer76.shadered.item;
+package com.noodlegamer76.shadered.world.item;
 
-import com.noodlegamer76.shadered.block.InitBlocks;
+import com.noodlegamer76.shadered.world.block.InitBlocks;
 import com.noodlegamer76.shadered.client.renderer.item.SkyblockItemRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -15,7 +12,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
