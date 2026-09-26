@@ -3,6 +3,7 @@ package com.noodlegamer76.shadered.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.Shadered;
+import com.noodlegamer76.shadered.client.model.item.DefaultedBlockItemGeoModel;
 import com.noodlegamer76.shadered.client.util.ModRenderTypes;
 import com.noodlegamer76.shadered.world.item.SkyblockItem;
 import com.noodlegamer76.shadered.world.item.SkyblockItemType;
@@ -28,7 +29,7 @@ public class SkyblockItemRenderer extends GeoItemRenderer<SkyblockItem> {
             default -> throw new IllegalArgumentException("Unsupported SkyblockItemType: " + type + ". This shouldn't happen.");
         };
 
-        return new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(Shadered.MODID, path));
+        return new DefaultedBlockItemGeoModel(ResourceLocation.fromNamespaceAndPath(Shadered.MODID, path));
     }
 
     @Override
