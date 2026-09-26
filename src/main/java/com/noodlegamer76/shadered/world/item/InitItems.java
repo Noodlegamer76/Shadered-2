@@ -11,6 +11,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class InitItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, Shadered.MODID);
 
+    public static final RegistryObject<Item> MAXWELL = ITEMS.register("maxwell",
+            () -> new MaxwellItem(InitBlocks.MAXWELL.get(), new Item.Properties()));
+
     public static final RegistryObject<SkyblockItem> SPACE_SKYBLOCK = ITEMS.register("space_skyblock",
             () -> new SkyblockItem(0, SkyblockItemType.BLOCK, InitBlocks.SKYBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<SkyblockItem> SPACE_SKYBLOCK_STAIRS = ITEMS.register("space_skyblock_stairs",

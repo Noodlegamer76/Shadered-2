@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.noodlegamer76.shadered.world.block.InitBlocks;
 import com.noodlegamer76.shadered.world.item.InitItems;
 import com.noodlegamer76.shadered.tab.InitCreativeTabs;
+import com.noodlegamer76.shadered.world.tile.InitBlockEntities;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -21,6 +22,7 @@ public class Shadered {
 
         InitItems.ITEMS.register(modEventBus);
         InitBlocks.BLOCKS.register(modEventBus);
+        InitBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         InitCreativeTabs.CREATIVE_TABS.register(modEventBus);
     }
 }

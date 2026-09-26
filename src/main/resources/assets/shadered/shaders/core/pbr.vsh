@@ -44,7 +44,6 @@ mat4 getSkinMatrix() {
         return mat4(1.0);
     }
 
-
     mat4 skin =
         BoneWeights.x * BoneMatrices[Offset + int(BoneIDs.x)] +
         BoneWeights.y * BoneMatrices[Offset + int(BoneIDs.y)] +
@@ -72,9 +71,8 @@ void main() {
     vWorldPos = worldPos.xyz;
     vNormal = normalize(mat3(ModelMat) * skinnedNormal);
 
-    vec3 pos = Position + ChunkOffset;
-    vertexDistance = fog_distance(ModelViewMat, pos, FogShape);
-
     vTangent = vec4(normalize(mat3(ModelMat) * skinnedTangent.xyz), skinnedTangent.w);
     v_WorldPos = (ModelViewMat * vec4(Position, 1.0)).xyz;
+
+    vertexDistance = length(viewPos);
 }

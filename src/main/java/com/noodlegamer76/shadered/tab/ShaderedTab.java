@@ -43,6 +43,8 @@ public class ShaderedTab {
 
             event.accept(InitItems.BLACK_BLOCK);
             event.accept(InitItems.GREEN_SCREEN);
+
+            event.accept(InitItems.MAXWELL);
         }
     }
 }
