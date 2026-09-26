@@ -9,11 +9,32 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InitBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, Shadered.MODID);
 
     public static final RegistryObject<Skyblock> SKYBLOCK = BLOCKS.register("skyblock",
             () -> new Skyblock(BlockBehaviour.Properties.of()
+                    .isValidSpawn(((pState, pLevel, pPos, pValue) -> false))
+                    .mapColor(DyeColor.WHITE)
+                    .instrument(NoteBlockInstrument.XYLOPHONE)
+                    .strength(0.5f, 1.5f)
+                    .requiresCorrectToolForDrops()
+            ));
+
+    public static final RegistryObject<SkyblockStairs> SKYBLOCK_STAIRS = BLOCKS.register("skyblock_stairs",
+            () -> new SkyblockStairs(() -> SKYBLOCK.get().defaultBlockState(), BlockBehaviour.Properties.of()
+                    .isValidSpawn(((pState, pLevel, pPos, pValue) -> false))
+                    .mapColor(DyeColor.WHITE)
+                    .instrument(NoteBlockInstrument.XYLOPHONE)
+                    .strength(0.5f, 1.5f)
+                    .requiresCorrectToolForDrops()
+            ));
+
+    public static final RegistryObject<SkyblockSlab> SKYBLOCK_SLAB = BLOCKS.register("skyblock_slab",
+            () -> new SkyblockSlab(BlockBehaviour.Properties.of()
                     .isValidSpawn(((pState, pLevel, pPos, pValue) -> false))
                     .mapColor(DyeColor.WHITE)
                     .instrument(NoteBlockInstrument.XYLOPHONE)
@@ -33,5 +54,6 @@ public class InitBlocks {
                     .mapColor(DyeColor.LIME)
                     .strength(1.0f, 1.5f)
                     .requiresCorrectToolForDrops()
+                    .emissiveRendering(((pState, pLevel, pPos) -> true))
             ));
 }

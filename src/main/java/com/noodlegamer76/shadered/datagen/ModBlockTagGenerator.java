@@ -19,7 +19,15 @@ public class ModBlockTagGenerator extends BlockTagsProvider  {
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(InitBlocks.SKYBLOCK.get())
+                .add(InitBlocks.SKYBLOCK_STAIRS.get())
+                .add(InitBlocks.SKYBLOCK_SLAB.get())
                 .add(InitBlocks.BLACK_BLOCK.get())
                 .add(InitBlocks.GREEN_SCREEN.get());
+
+        tag(BlockTags.STAIRS)
+                .add(InitBlocks.SKYBLOCK_STAIRS.get());
+
+        tag(BlockTags.SLABS)
+                .add(InitBlocks.SKYBLOCK_SLAB.get());
     }
 }

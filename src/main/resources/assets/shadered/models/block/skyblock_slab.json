@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/slab",
+  "render_type": "shadered:skyblock"
+}

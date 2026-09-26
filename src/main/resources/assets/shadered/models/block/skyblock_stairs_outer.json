@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "render_type": "shadered:skyblock"
+}

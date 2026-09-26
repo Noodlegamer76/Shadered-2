@@ -3,12 +3,26 @@
   "block.shadered.green_screen": "Green Screen",
 
   "item.shadered.space_skyblock": "Space Skyblock",
+  "item.shadered.space_skyblock_stairs": "Space Skyblock Stairs",
+  "item.shadered.space_skyblock_slab": "Space Skyblock Slab",
   "item.shadered.stormy_skyblock": "Stormy Skyblock",
+  "item.shadered.stormy_skyblock_stairs": "Stormy Skyblock Stairs",
+  "item.shadered.stormy_skyblock_slab": "Stormy Skyblock Slab",
   "item.shadered.ocean_skyblock": "Ocean Skyblock",
+  "item.shadered.ocean_skyblock_stairs": "Ocean Skyblock Stairs",
+  "item.shadered.ocean_skyblock_slab": "Ocean Skyblock Slab",
   "item.shadered.eclipse_skyblock": "Eclipse Skyblock",
+  "item.shadered.eclipse_skyblock_stairs": "Eclipse Skyblock Stairs",
+  "item.shadered.eclipse_skyblock_slab": "Eclipse Skyblock Slab",
   "item.shadered.iridia_skyblock": "Iridia Skyblock",
+  "item.shadered.iridia_skyblock_stairs": "Iridia Skyblock Stairs",
+  "item.shadered.iridia_skyblock_slab": "Iridia Skyblock Slab",
   "item.shadered.forest_skyblock": "Forest Skyblock",
+  "item.shadered.forest_skyblock_stairs": "Forest Skyblock Stairs",
+  "item.shadered.forest_skyblock_slab": "Forest Skyblock Slab",
   "item.shadered.light_skyblock": "Light Skyblock",
+  "item.shadered.light_skyblock_stairs": "Light Skyblock Stairs",
+  "item.shadered.light_skyblock_slab": "Light Skyblock Slab",
 
   "shadered.creative_tab": "Shadered"
 }

@@ -4,7 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.world.block.InitBlocks;
 import com.noodlegamer76.shadered.world.block.ModBlockStateProperties;
+import com.noodlegamer76.shadered.world.block.Skyblock;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -34,7 +37,7 @@ public class SkyblockRenderer {
             int pPackedOverlay,
             CallbackInfo ci) {
 
-        if (pState.is(InitBlocks.SKYBLOCK.get())) {
+        if (pState.hasProperty(ModBlockStateProperties.SKYBLOCK)) {
             int skyblock = pState.getValue(ModBlockStateProperties.SKYBLOCK);
             int packedSkyblock = LightTexture.pack(skyblock, 0);
 

@@ -14,12 +14,33 @@ public class ShaderedTab {
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == InitCreativeTabs.SHADERED_TAB.get()) {
             event.accept(InitItems.SPACE_SKYBLOCK);
+            event.accept(InitItems.SPACE_SKYBLOCK_STAIRS);
+            event.accept(InitItems.SPACE_SKYBLOCK_SLAB);
+
             event.accept(InitItems.STORMY_SKYBLOCK);
+            event.accept(InitItems.STORMY_SKYBLOCK_STAIRS);
+            event.accept(InitItems.STORMY_SKYBLOCK_SLAB);
+
             event.accept(InitItems.OCEAN_SKYBLOCK);
+            event.accept(InitItems.OCEAN_SKYBLOCK_STAIRS);
+            event.accept(InitItems.OCEAN_SKYBLOCK_SLAB);
+
             event.accept(InitItems.ECLIPSE_SKYBLOCK);
+            event.accept(InitItems.ECLIPSE_SKYBLOCK_STAIRS);
+            event.accept(InitItems.ECLIPSE_SKYBLOCK_SLAB);
+
             event.accept(InitItems.IRIDIA_SKYBLOCK);
+            event.accept(InitItems.IRIDIA_SKYBLOCK_STAIRS);
+            event.accept(InitItems.IRIDIA_SKYBLOCK_SLAB);
+
             event.accept(InitItems.FOREST_SKYBLOCK);
+            event.accept(InitItems.FOREST_SKYBLOCK_STAIRS);
+            event.accept(InitItems.FOREST_SKYBLOCK_SLAB);
+
             event.accept(InitItems.LIGHT_SKYBLOCK);
+            event.accept(InitItems.LIGHT_SKYBLOCK_STAIRS);
+            event.accept(InitItems.LIGHT_SKYBLOCK_SLAB);
+
             event.accept(InitItems.BLACK_BLOCK);
             event.accept(InitItems.GREEN_SCREEN);
         }

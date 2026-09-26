@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shadered:block/skyblock_slab"
+    },
+    "type=double": {
+      "model": "shadered:block/skyblock"
+    },
+    "type=top": {
+      "model": "shadered:block/skyblock_slab_top"
+    }
+  }
+}

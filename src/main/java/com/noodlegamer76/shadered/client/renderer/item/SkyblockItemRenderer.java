@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.noodlegamer76.shadered.Shadered;
 import com.noodlegamer76.shadered.client.util.ModRenderTypes;
 import com.noodlegamer76.shadered.world.item.SkyblockItem;
+import com.noodlegamer76.shadered.world.item.SkyblockItemType;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,8 +16,19 @@ import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class SkyblockItemRenderer extends GeoItemRenderer<SkyblockItem> {
-    public SkyblockItemRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "skyblock")));
+    public SkyblockItemRenderer(SkyblockItemType type) {
+        super(getItemModel(type));
+    }
+
+    public static DefaultedItemGeoModel<SkyblockItem> getItemModel(SkyblockItemType type) {
+        String path = switch (type) {
+            case BLOCK -> "skyblock";
+            case STAIRS -> "skyblock_stairs";
+            case SLAB -> "skyblock_slab";
+            default -> throw new IllegalArgumentException("Unsupported SkyblockItemType: " + type + ". This shouldn't happen.");
+        };
+
+        return new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(Shadered.MODID, path));
     }
 
     @Override
