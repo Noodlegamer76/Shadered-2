@@ -156,6 +156,10 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
+    maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
+    maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // ForgeConfigAPIPort
 }
 
 dependencies {
@@ -194,8 +198,32 @@ dependencies {
 
 
     //Test Mods
+
+    //Embeddium
     compileOnly fg.deobf("org.embeddedt:embeddium-1.20.1:0.3.31-beta.53+mc1.20.1")
+
+    //Oculus
     compileOnly fg.deobf("maven.modrinth:GchcoXML:iQ1SwGc3")
+
+    implementation fg.deobf("curse.maven:framedblocks-441647:7386520")
+
+    //Create
+    boolean runCreate = false
+
+    if (runCreate) {
+        implementation(fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false })
+        implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
+        compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}"))
+        runtimeOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"))
+        implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))
+    }
+    else {
+        compileOnly(fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false })
+        compileOnly(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
+        compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}"))
+        compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"))
+        compileOnly(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))
+    }
 
 }
 

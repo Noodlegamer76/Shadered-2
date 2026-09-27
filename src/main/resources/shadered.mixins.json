@@ -11,6 +11,8 @@
     "compat.embeddium.DefaultTerrainRenderPassesMixin",
     "compat.embeddium.ShaderChunkRendererMixin",
     "compat.embeddium.SodiumWorldRendererMixin",
+    "compat.framedblocks.BlockCamoContainerMixin",
+    "compat.framedblocks.FramedBlockEntityMixin",
     "compat.iris.WorldRenderingPhaseMixin"
   ],
   "client": [

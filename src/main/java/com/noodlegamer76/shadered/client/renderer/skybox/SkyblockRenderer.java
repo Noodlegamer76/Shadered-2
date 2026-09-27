@@ -2,18 +2,15 @@ package com.noodlegamer76.shadered.client.renderer.skybox;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.noodlegamer76.shadered.world.block.InitBlocks;
+import com.noodlegamer76.shadered.compat.ModCompatUtils;
+import com.noodlegamer76.shadered.compat.framedblocks.FramedBlocksCompat;
 import com.noodlegamer76.shadered.world.block.ModBlockStateProperties;
-import com.noodlegamer76.shadered.world.block.Skyblock;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class SkyblockRenderer {
@@ -35,42 +32,35 @@ public class SkyblockRenderer {
             int pLightmap2,
             int pLightmap3,
             int pPackedOverlay,
+            BlockColors blockColors,
             CallbackInfo ci) {
+        int skyblock = -1;
 
         if (pState.hasProperty(ModBlockStateProperties.SKYBLOCK)) {
-            int skyblock = pState.getValue(ModBlockStateProperties.SKYBLOCK);
+            skyblock = pState.getValue(ModBlockStateProperties.SKYBLOCK);
+        }
+        else if (ModCompatUtils.isFramedBlocksLoaded() && FramedBlocksCompat.isFramedBlock(pState)) {
+            skyblock = FramedBlocksCompat.getFramedBlockSkybox(pLevel, pState, pPos);
+        }
+
+        if (skyblock != -1) {
             int packedSkyblock = LightTexture.pack(skyblock, 0);
 
-            int[] vertices = pQuad.getVertices();
-            float[] afloat = new float[]{pBrightness0, pBrightness1, pBrightness2, pBrightness3};
-
-            Matrix4f poseMatrix = pPose.pose();
-
-            float[][] uv = {
-                    {0.0F, 0.0F},
-                    {1.0F, 0.0F},
-                    {1.0F, 1.0F},
-                    {0.0F, 1.0F}
-            };
-
-            for (int k = 0; k < 4; ++k) {
-                int offset = k * 8;
-
-                float x = Float.intBitsToFloat(vertices[offset]);
-                float y = Float.intBitsToFloat(vertices[offset + 1]);
-                float z = Float.intBitsToFloat(vertices[offset + 2]);
-
-                Vector4f worldPos = poseMatrix.transform(new Vector4f(x, y, z, 1.0F));
-
-                pConsumer.vertex(worldPos.x(), worldPos.y(), worldPos.z())
-                        .color(afloat[k], afloat[k], afloat[k], 1.0F)
-                        .uv(uv[k][0], uv[k][1])
-                        .overlayCoords(0, 0)
-                        .uv2(packedSkyblock)
-                        .normal(0, 0, 0)
-                        .endVertex();
+            float f;
+            float f1;
+            float f2;
+            if (pQuad.isTinted()) {
+                int i = blockColors.getColor(pState, pLevel, pPos, pQuad.getTintIndex());
+                f = (float) (i >> 16 & 255) / 255.0F;
+                f1 = (float) (i >> 8 & 255) / 255.0F;
+                f2 = (float) (i & 255) / 255.0F;
+            } else {
+                f = 1.0F;
+                f1 = 1.0F;
+                f2 = 1.0F;
             }
 
+            pConsumer.putBulkData(pPose, pQuad, new float[]{pBrightness0, pBrightness1, pBrightness2, pBrightness3}, f, f1, f2, new int[]{packedSkyblock, packedSkyblock, packedSkyblock, packedSkyblock}, pPackedOverlay, true);
             ci.cancel();
         }
     }

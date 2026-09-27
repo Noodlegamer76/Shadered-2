@@ -27,7 +27,6 @@ public class MaxwellRenderer implements BlockEntityRenderer<MaxwellEntity> {
         McModel model = AssimpModels.getModel(ResourceLocation.fromNamespaceAndPath(Shadered.MODID, "models/complex/maxwell.glb"));
 
         if (model == null) {
-            System.out.println("Model not found");
             return;
         }
 
@@ -49,11 +48,14 @@ public class MaxwellRenderer implements BlockEntityRenderer<MaxwellEntity> {
 
         if (dir == Direction.NORTH) {
             poseStack.mulPose(Axis.YP.rotationDegrees(90.0f));
-        } else if (dir == Direction.SOUTH) {
+        }
+        else if (dir == Direction.SOUTH) {
             poseStack.mulPose(Axis.YP.rotationDegrees(270.0f));
-        } else if (dir == Direction.WEST) {
+        }
+        else if (dir == Direction.WEST) {
             poseStack.mulPose(Axis.YP.rotationDegrees(180.0f));
-        } else if (dir == Direction.EAST) {
+        }
+        else if (dir == Direction.EAST) {
             poseStack.mulPose(Axis.YP.rotationDegrees(0));
         }
 
