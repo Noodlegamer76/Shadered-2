@@ -191,6 +191,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-windows"
     runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-linux"
     runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos-arm64"
 
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
@@ -405,7 +406,7 @@ task bundleAllNativesForDistribution {
                 } else if (fileName.endsWith(".so")) {
                     dir = "linux/x86_64"
                 } else if (fileName.endsWith(".dylib")) {
-                    dir = fileName.contains("arm")
+                    dir = classifier == "natives-macos-arm64"
                             ? "osx/arm64"
                             : "osx/x86_64"
                 }
