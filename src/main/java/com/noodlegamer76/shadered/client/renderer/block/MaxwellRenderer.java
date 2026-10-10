@@ -40,9 +40,9 @@ public class MaxwellRenderer implements BlockEntityRenderer<MaxwellEntity> {
         BlockState state = pBlockEntity.getBlockState();
 
         poseStack = new PoseStack();
+
         poseStack.translate(pBlockEntity.getBlockPos().getX(), pBlockEntity.getBlockPos().getY(), pBlockEntity.getBlockPos().getZ());
         poseStack.translate(0.5f, 0.0f, 0.5f);
-
 
         Direction dir = state.getValue(Maxwell.FACING);
 

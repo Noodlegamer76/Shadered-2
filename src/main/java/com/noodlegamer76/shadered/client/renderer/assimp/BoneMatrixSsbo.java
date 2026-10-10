@@ -27,6 +27,10 @@ public class BoneMatrixSsbo {
         GL30.glBindBufferBase(GL43.GL_SHADER_STORAGE_BUFFER, 0, ssbo);
     }
 
+    public void bind(int binding) {
+        GL30.glBindBufferBase(GL43.GL_SHADER_STORAGE_BUFFER, binding, ssbo);
+    }
+
     public void upload(List<Matrix4f> matrices) {
         buffer.clear();
         float[] tmp = new float[16];

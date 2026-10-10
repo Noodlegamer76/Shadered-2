@@ -5,11 +5,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.math.Axis;
+import com.noodlegamer76.shadered.Shadered;
 import com.noodlegamer76.shadered.client.assimp.AssimpMaterial;
 import com.noodlegamer76.shadered.client.assimp.AssimpModel;
+import com.noodlegamer76.shadered.client.util.TextureUtils;
 import com.noodlegamer76.shadered.event.RegisterShaders;
+import com.noodlegamer76.shadered.mixin.accessor.LightTextureAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,14 +24,17 @@ import java.util.*;
 
 public class AssimpRenderer {
     private static final AssimpRenderer INSTANCE = new AssimpRenderer();
-    public static AssimpRenderer getInstance() { return INSTANCE; }
+
+    public static AssimpRenderer getInstance() {
+        return INSTANCE;
+    }
 
     private final Map<AssimpMaterial, Map<VertexBuffer, List<RenderEntry>>> opaqueEntries = new HashMap<>();
     private final List<RenderEntry> transparentEntries = new ArrayList<>();
     private final BoneMatrixSsbo boneMatrixSsbo = new BoneMatrixSsbo();
+    private final MinecraftLightUvData minecraftLightUvData = new MinecraftLightUvData();
     private final Set<RenderableModel> models = new HashSet<>();
     private final Map<RenderableModel, Integer> modelOffsets = new LinkedHashMap<>();
-    private int lastModelOffset = 1;
 
     private AssimpRenderer() {}
 
@@ -96,10 +104,14 @@ public class AssimpRenderer {
         }
 
         boneMatrixSsbo.upload(allBones);
+        minecraftLightUvData.uploadForFrame();
 
         GL43.glMemoryBarrier(GL43.GL_SHADER_STORAGE_BARRIER_BIT);
 
         RenderSystem.setShader(RegisterShaders::getPbr);
+        ResourceLocation lightTextureLocation = ((LightTextureAccessor) mc.gameRenderer.lightTexture()).shadered$getLightTextureLocation();
+        int lightTextureId = TextureUtils.getTextureId(lightTextureLocation);
+        RegisterShaders.getPbr().setSampler("MinecraftLightTexture", lightTextureId);
 
         Uniform viewMat = RegisterShaders.getPbr().getUniform("ViewMat");
         if (viewMat != null) viewMat.set(poseStack.last().pose());
@@ -124,6 +136,9 @@ public class AssimpRenderer {
         Uniform ambientStrength = RegisterShaders.getPbr().getUniform("AmbientStrength");
         if (ambientStrength != null) ambientStrength.set(1.0f);
 
+        Uniform renderDistanceUniform = RegisterShaders.getPbr().getUniform("RenderDistance");
+        if (renderDistanceUniform != null) renderDistanceUniform.set(minecraftLightUvData.getPreviousRenderDistance());
+
         RenderSystem.enableDepthTest();
         renderOpaque(new PoseStack());
         renderTransparent(new PoseStack());
@@ -139,7 +154,8 @@ public class AssimpRenderer {
     private void renderOpaque(PoseStack poseStack) {
         for (var matEntry : opaqueEntries.entrySet()) {
             matEntry.getKey().bind();
-            GL43.glBindBufferBase(GL43.GL_SHADER_STORAGE_BUFFER, 0, boneMatrixSsbo.ssbo);
+            boneMatrixSsbo.bind(0);
+            minecraftLightUvData.bind(1);
             for (var bufferEntry : matEntry.getValue().entrySet()) {
                 VertexBuffer buffer = bufferEntry.getKey();
                 buffer.bind();
@@ -155,7 +171,8 @@ public class AssimpRenderer {
 
         for (RenderEntry entry : transparentEntries) {
             entry.model().getMaterial().bind();
-            GL43.glBindBufferBase(GL43.GL_SHADER_STORAGE_BUFFER, 0, boneMatrixSsbo.ssbo);
+            boneMatrixSsbo.bind(0);
+            minecraftLightUvData.bind(1);
             VertexBuffer buffer = entry.model().getVertexBuffer();
             buffer.bind();
             draw(poseStack, entry, buffer);
@@ -187,6 +204,7 @@ public class AssimpRenderer {
         }
 
         boneMatrixSsbo.upload(allBones);
+        minecraftLightUvData.uploadForFrame();
         GL43.glMemoryBarrier(GL43.GL_SHADER_STORAGE_BARRIER_BIT);
 
         RenderSystem.setShader(RegisterShaders::getPbr);
@@ -213,7 +231,8 @@ public class AssimpRenderer {
 
         for (AssimpModel part : model.getModel()) {
             part.getMaterial().bind();
-            GL43.glBindBufferBase(GL43.GL_SHADER_STORAGE_BUFFER, 0, boneMatrixSsbo.ssbo);
+            boneMatrixSsbo.bind(0);
+            minecraftLightUvData.bind(1);
 
             VertexBuffer buffer = part.getVertexBuffer();
             buffer.bind();
@@ -280,6 +299,14 @@ public class AssimpRenderer {
 
             poseStack.popPose();
         }
+    }
+
+    public MinecraftLightUvData getMinecraftLightUvData() {
+        return minecraftLightUvData;
+    }
+
+    public BoneMatrixSsbo getBoneMatrixSsbo() {
+        return boneMatrixSsbo;
     }
 
     public record RenderEntry(

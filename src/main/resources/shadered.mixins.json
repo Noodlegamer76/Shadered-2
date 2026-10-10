@@ -18,7 +18,9 @@
   "client": [
     "LevelRendererMixin",
     "ModelBlockRendererMixin",
-    "RenderTypeMixin"
+    "RebuildTaskMixin",
+    "RenderTypeMixin",
+    "accessor.LightTextureAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
