@@ -15,9 +15,11 @@ uniform vec3 ChunkOffset;
 uniform int FogShape;
 uniform mat4 ModelMat;
 uniform mat4 ViewMat;
+uniform mat4 InverseViewMat;
 uniform mat4 ProjMat;
 uniform mat4 ModelViewMat;
 uniform int Offset;
+uniform int UseViewMatrix;
 
 layout(std430, binding = 0) buffer Bones {
     mat4 BoneMatrices[];
@@ -30,7 +32,6 @@ out float vertexDistance;
 out vec3 vWorldPos;
 out vec3 vNormal;
 out vec4 vTangent;
-out vec3 v_WorldPos;
 
 mat4 getSkinMatrix() {
     if (Offset < 0) {
@@ -68,11 +69,16 @@ void main() {
     texCoord0 = UV0;
     vertexColor = Color;
 
-    vWorldPos = worldPos.xyz;
+    if (UseViewMatrix != 0) {
+        vWorldPos = worldPos.xyz;
+    }
+    else {
+        vWorldPos = (InverseViewMat * ModelMat * skinnedPos).xyz;
+    }
+
     vNormal = normalize(mat3(ModelMat) * skinnedNormal);
 
     vTangent = vec4(normalize(mat3(ModelMat) * skinnedTangent.xyz), skinnedTangent.w);
-    v_WorldPos = (ModelViewMat * vec4(Position, 1.0)).xyz;
 
     vertexDistance = length(viewPos);
 }

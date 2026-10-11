@@ -33,7 +33,7 @@ public class MaxwellItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         if (model == null) return;
 
-        RenderableModel renderableModel = new RenderableModel();
+        RenderableModel renderableModel = new RenderableModel(false);
 
         for (AssimpModel assimpModel : model.getModels()) {
             renderableModel.add(assimpModel);
@@ -77,7 +77,7 @@ public class MaxwellItemRenderer extends BlockEntityWithoutLevelRenderer {
 
             renderableModel.modelMatrix = new Matrix4f(poseStack.last().pose());
 
-            AssimpRenderer.getInstance().renderDirect(renderableModel, poseStack, gui);
+            AssimpRenderer.getInstance().addModel(renderableModel);
         }
 
         poseStack.popPose();

@@ -25,7 +25,6 @@ layout(std430, binding = 1) buffer Lights {
     int PageAddress[];
 };
 
-in vec3 v_WorldPos;
 in float vertexDistance;
 in vec2 texCoord0;
 in vec4 vertexColor;
@@ -121,7 +120,7 @@ void main() {
         discard;
     }
 
-    vec3 light = sampleInterpolatedLight(v_WorldPos);
+    vec3 light = sampleInterpolatedLight(vWorldPos);
 
     vec3 litColor = (sampledAlbedo.rgb * light) + sampledEmissive.rgb;
 

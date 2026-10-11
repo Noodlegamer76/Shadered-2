@@ -11,6 +11,19 @@ public class RenderableModel {
     private final List<AssimpModel> model = new ArrayList<>();
     public Matrix4f modelMatrix;
     public Animator animator;
+    private final boolean viewMatrix;
+
+    public RenderableModel() {
+        this(true);
+    }
+
+    public RenderableModel(boolean viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public boolean shouldUseViewMatrix() {
+        return viewMatrix;
+    }
 
     public void add(AssimpModel model) {
         this.model.add(model);
